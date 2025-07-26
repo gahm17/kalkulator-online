@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scientific Calculator</title>
+    <style>
+        :root {
+            --bg-color: #1e1e2f;
+            --btn-color: #3e3e5e;
+            --text-color: #fff;
+            --accent: #fe9241;
+            --equal: #009688;
+            --clear: #e53935;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #e0e7ef;
+            --btn-color: #f4f6fa;
+            --text-color: #212121;
+            --accent: #ff9800;
+            --equal: #26a69a;
+            --clear: #d32f2f;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            flex-grow: 1;
+        }
+
+        .calculator {
+            background: var(--btn-color);
+            border-radius: 20px;
+            padding: 20px;
+            width: 400px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .display {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1.8rem;
+            text-align: right;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            word-wrap: break-word;
+            min-height: 70px;
+            max-height: 120px;
+            overflow-y: auto;
+            line-height: 1.4;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: var(--btn-color);
+            color: var(--text-color);
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        button.operator {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        button.equal {
+            background: var(--equal);
+            color: #fff;
+            grid-column: span 2;
+        }
+
+        button.clear {
+            background: var(--clear);
+            color: #fff;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .top-bar label {
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .fraction {
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+            margin: 0 4px;
+        }
+
+        .fraction .top,
+        .fraction .bottom {
+            border-bottom: 1px solid var(--text-color);
+            min-width: 20px;
+            min-height: 24px;
+            display: block;
+            outline: none;
+        }
+
+        .history-panel {
+            width: 250px;
+            background: var(--btn-color);
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 500px;
+        }
+
+        .history-panel h3 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--text-color);
+            padding-bottom: 10px;
+        }
+
+        .history-list {
+            list-style: none;
+            padding-left: 0;
+            font-size: 0.95rem;
+        }
+
+        .history-list li {
+            padding: 6px 0;
+            border-bottom: 1px dashed var(--text-color);
+            word-break: break-word;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 10px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            background: var(--bg-color);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .calculator,
+            .history-panel {
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .history-panel {
+                max-height: 300px;
+            }
+
+            footer {
+                font-size: 0.8rem;
+                padding-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="calculator" role="region" aria-label="Scientific Calculator">
+            <div class="top-bar">
+                <label>
+                    <input type="checkbox" id="theme-toggle" aria-label="Toggle light or dark mode" /> Light Mode
+                </label>
+            </div>
+            <div class="display" id="display" aria-live="polite">0</div>
+            <div class="buttons">
+                <button onclick="clearDisplay()" class="clear">C</button>
+                <button onclick="deleteChar()">DEL</button>
+                <button onclick="appendOperator('/')">/</button>
+                <button onclick="appendOperator('*')">*</button>
+                <button onclick="appendFunction('sqrt(')">√</button>
+
+                <button onclick="appendNumber('7')">7</button>
+                <button onclick="appendNumber('8')">8</button>
+                <button onclick="appendNumber('9')">9</button>
+                <button onclick="appendOperator('-')">-</button>
+                <button onclick="appendFunction('log(')">log</button>
+
+                <button onclick="appendNumber('4')">4</button>
+                <button onclick="appendNumber('5')">5</button>
+                <button onclick="appendNumber('6')">6</button>
+                <button onclick="appendOperator('+')">+</button>
+                <button onclick="appendFunction('sin(')">sin</button>
+
+                <button onclick="appendNumber('1')">1</button>
+                <button onclick="appendNumber('2')">2</button>
+                <button onclick="appendNumber('3')">3</button>
+                <button onclick="appendFunction('cos(')">cos</button>
+                <button onclick="appendFunction('tan(')">tan</button>
+
+                <button onclick="appendNumber('0')">0</button>
+                <button onclick="appendNumber('.')">.</button>
+                <button onclick="appendFunction('^')">^</button>
+                <button onclick="appendFunction('(')">(</button>
+                <button onclick="appendFunction(')')">)</button>
+
+                <button onclick="appendFraction()">a/b</button>
+                <button onclick="calculate()" class="equal">=</button>
+            </div>
+        </div>
+
+        <div class="history-panel">
+            <h3>Riwayat Hitungan</h3>
+            <ul id="history" class="history-list"></ul>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 Grace Anggia Heilinar Manullang
+    </footer>
+
+    <script>
+        const display = document.getElementById('display');
+        const themeToggle = document.getElementById('theme-toggle');
+        const historyList = document.getElementById('history');
+        let currentInput = '';
+
+        themeToggle.addEventListener('change', () => {
+            document.documentElement.setAttribute('data-theme', themeToggle.checked ? 'light' : 'dark');
+        });
+
+        function appendNumber(num) {
+            currentInput += num;
+            updateDisplay();
+        }
+
+        function appendOperator(op) {
+            currentInput += op;
+            updateDisplay();
+        }
+
+        function appendFunction(fn) {
+            currentInput += fn;
+            updateDisplay();
+        }
+
+        function appendFraction() {
+            const fractionHTML = `
+        <span class="fraction" contenteditable="false">
+          <span class="top" contenteditable="true" oninput="updateFractions()">?</span>
+          <span class="bottom" contenteditable="true" oninput="updateFractions()">?</span>
+        </span>
+      `;
+            const lastChar = display.innerText.slice(-1);
+            if (/\d/.test(lastChar)) {
+                display.innerHTML += ' ';
+            }
+            display.innerHTML += fractionHTML;
+            updateFractions();
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            display.innerHTML = '0';
+        }
+
+        function deleteChar() {
+            currentInput = currentInput.slice(0, -1);
+            updateDisplay();
+        }
+
+        function updateFractions() {
+            const allFractions = display.querySelectorAll('.fraction');
+            let result = display.innerHTML;
+
+            allFractions.forEach(f => {
+                const top = f.querySelector('.top').textContent || '0';
+                const bottom = f.querySelector('.bottom').textContent || '1';
+                const fractionStr = `(${top}/${bottom})`;
+                const fullHTML = f.outerHTML;
+
+                const regex = new RegExp(`(\\d+)\\s*${escapeRegExp(fullHTML)}`);
+                if (regex.test(result)) {
+                    result = result.replace(regex, `($1+${fractionStr})`);
+                } else {
+                    result = result.replace(fullHTML, fractionStr);
+                }
+            });
+
+            currentInput = result;
+        }
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function calculate() {
+            updateFractions();
+            try {
+                const safeInput = convertMixedFractions(currentInput)
+                    .replace(/\^/g, '**')
+                    .replace(/sqrt\(/g, 'Math.sqrt(')
+                    .replace(/log\(/g, 'Math.log10(')
+                    .replace(/sin\(/g, 'Math.sin(')
+                    .replace(/cos\(/g, 'Math.cos(')
+                    .replace(/tan\(/g, 'Math.tan(');
+
+                let result = eval(safeInput);
+                if (typeof result === 'number' && !Number.isInteger(result)) {
+                    result = parseFloat(result.toFixed(10));
+                }
+
+                addToHistory(currentInput, result);
+                display.innerHTML = result;
+                currentInput = result.toString();
+            } catch {
+                display.innerHTML = 'Error';
+                currentInput = '';
+            }
+        }
+
+        function convertMixedFractions(input) {
+            return input.replace(/(\d+)\s+(\d+)\/(\d+)/g, (_, whole, num, denom) => {
+                return `(${whole}+(${num}/${denom}))`;
+            });
+        }
+
+        function updateDisplay() {
+            display.textContent = currentInput || '0';
+        }
+
+        function addToHistory(expression, result) {
+            const li = document.createElement('li');
+            li.textContent = `${expression} = ${result}`;
+            historyList.prepend(li);
+        }
+    </script>
+</body>
+
+</html>
