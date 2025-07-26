@@ -1,0 +1,186 @@
+        :root {
+            --bg-color: #1e1e2f;
+            --btn-color: #3e3e5e;
+            --text-color: #fff;
+            --accent: #fe9241;
+            --equal: #009688;
+            --clear: #e53935;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #e0e7ef;
+            --btn-color: #f4f6fa;
+            --text-color: #212121;
+            --accent: #ff9800;
+            --equal: #26a69a;
+            --clear: #d32f2f;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            flex-grow: 1;
+        }
+
+        .calculator {
+            background: var(--btn-color);
+            border-radius: 20px;
+            padding: 20px;
+            width: 400px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .display {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1.8rem;
+            text-align: right;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            word-wrap: break-word;
+            min-height: 70px;
+            max-height: 120px;
+            overflow-y: auto;
+            line-height: 1.4;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: var(--btn-color);
+            color: var(--text-color);
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        button.operator {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        button.equal {
+            background: var(--equal);
+            color: #fff;
+            grid-column: span 2;
+        }
+
+        button.clear {
+            background: var(--clear);
+            color: #fff;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .top-bar label {
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .fraction {
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+            margin: 0 4px;
+        }
+
+        .fraction .top,
+        .fraction .bottom {
+            border-bottom: 1px solid var(--text-color);
+            min-width: 20px;
+            min-height: 24px;
+            display: block;
+            outline: none;
+        }
+
+        .history-panel {
+            width: 250px;
+            background: var(--btn-color);
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 500px;
+        }
+
+        .history-panel h3 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--text-color);
+            padding-bottom: 10px;
+        }
+
+        .history-list {
+            list-style: none;
+            padding-left: 0;
+            font-size: 0.95rem;
+        }
+
+        .history-list li {
+            padding: 6px 0;
+            border-bottom: 1px dashed var(--text-color);
+            word-break: break-word;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 10px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            background: var(--bg-color);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .calculator,
+            .history-panel {
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .history-panel {
+                max-height: 300px;
+            }
+
+            footer {
+                font-size: 0.8rem;
+                padding-bottom: 15px;
+            }
+        }
